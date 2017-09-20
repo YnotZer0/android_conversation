@@ -1,0 +1,35 @@
+{
+  "package": {
+    "vcs_url": "https://github.com/watson-developer-cloud/android-sdk.git",
+    "repo": "maven",
+    "issue_tracker_url": "https://github.com/watson-developer-cloud/android-sdk/issues",
+    "subject": "milbuild",
+    "website_url": "https://github.com/watson-developer-cloud/android-sdk",
+    "name": "android-sdk"
+  },
+
+  "version": {
+    "name": "0.4.2"
+  },
+
+  "files": [
+    {
+      "uploadPattern": "com/ibm/watson/developer_cloud/android-sdk/0.4.2/android-sdk-0.4.2-javadoc.jar",
+      "includePattern": "library/build/libs/library-javadoc.jar"
+    },
+    {
+      "uploadPattern": "com/ibm/watson/developer_cloud/android-sdk/0.4.2/android-sdk-0.4.2-sources.jar",
+      "includePattern": "library/build/libs/library-sources.jar"
+    },
+    {
+      "uploadPattern": "com/ibm/watson/developer_cloud/android-sdk/0.4.2/android-sdk-0.4.2.aar",
+      "includePattern": "library/build/outputs/aar/library-release.aar"
+    },
+    {
+      "uploadPattern": "com/ibm/watson/developer_cloud/android-sdk/0.4.2/android-sdk-0.4.2.pom",
+      "includePattern": "library/build/android-sdk.pom"
+    }
+  ],
+  
+  "publish": true
+}

@@ -1,0 +1,66 @@
+sudo: required
+language: android
+android:
+  components:
+  - tools
+  - build-tools-26.0.1
+  - android-19
+  - android-21
+  - android-22
+  - android-23
+  - android-26
+  - extra-android-m2repository
+  - sys-img-armeabi-v7a-android-19
+  - sys-img-armeabi-v7a-android-21
+  - sys-img-armeabi-v7a-android-22
+
+jdk:
+- oraclejdk8
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+env:
+  matrix:
+  - API=android-19 ABI=armeabi-v7a
+  - API=android-21 ABI=armeabi-v7a
+  - API=android-22 ABI=armeabi-v7a
+  global:
+  - ADB_INSTALL_TIMEOUT=8
+
+install: true
+
+script:
+- ./gradlew generateJavadocsJar
+- ./gradlew generateSourcesJar
+- ./gradlew generatePomFileForAarPublication
+- ./gradlew build jacocoTestReport
+- ./gradlew generateReleaseJavadoc
+- echo no | android create avd --force -n test -t $API --abi $ABI
+- emulator -avd test -no-skin -no-audio -no-window &
+- android-wait-for-emulator
+- adb shell input keyevent 82 &
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+- .utility/push-javadoc-to-gh-pages.sh
+
+deploy:
+- provider: releases
+  api_key: $GITHUB_TOKEN
+  file:
+    - $TRAVIS_BUILD_DIR/library/build/outputs/aar/library-debug.aar
+    - $TRAVIS_BUILD_DIR/library/build/outputs/aar/library-release.aar
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: watson-developer-cloud/android-sdk
+    condition: "$API = android-19"
+- provider: bintray
+  file: $TRAVIS_BUILD_DIR/descriptor.json
+  user: milbuild
+  key: $BINTRAY_KEY
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: watson-developer-cloud/android-sdk
+    condition: "$API = android-19"
